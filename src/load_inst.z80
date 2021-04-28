@@ -1,0 +1,67 @@
+.engine Uni80
+
+BACK_SPACE equ 0x08
+SPACE equ 0x20
+
+CR equ 0x0D
+NL equ 0x0A
+
+INST equ 0x100
+
+ld hl,inst
+ld c,0x01
+
+; input and echo back
+input:
+    in a,(0x00)
+    and 0x01
+    jr z,input
+in b, (c)
+
+
+available:
+    in a,(0x00)
+    and 0x02
+    jr z,available
+    
+ld a, BACK_SPACE
+cp b
+jr z,delete
+
+ld a, CR
+cp b
+jr z,new_line
+
+output:    out (c),b
+       ld (hl), b
+       inc hl
+
+
+jr input
+
+delete:
+    out (c),b
+    ld a,SPACE
+    out (c),a
+    dec hl
+    jr output
+
+new_line:
+    ld a,NL
+    out (c),a
+    out (c),b
+
+;output command
+ld de, INST
+and a
+sbc hl,de
+ld b,l
+ld hl,INST
+otir
+
+ld a,NL
+out (c),a
+ld a,CR
+out (c),a
+    
+    

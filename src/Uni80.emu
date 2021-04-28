@@ -1,0 +1,12 @@
+cpu Z80
+
+memory.ram.from 0x0000
+memory.ram.to 0x03ff
+
+
+serial simple
+serial.in 1
+serial.out 1
+serial.status 0
+serial.status.available 0x01
+serial.status.ready 0x02

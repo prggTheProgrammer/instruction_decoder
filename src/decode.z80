@@ -1,0 +1,121 @@
+; Get command
+.include load_inst.z80
+
+;inst equ 0x0100
+
+;ld c, 0x00
+;;ld b,10 
+;in b,(c)
+
+;ld hl,inst
+;inir
+
+; Get command start
+org 0
+ld hl, inst
+
+ld a, (hl)
+sub 0x61
+
+ld hl, 0x200
+cp 0
+jr z,start_com
+
+ld b,a
+ld de , 0x0010
+
+loop:
+    add hl, de
+    djnz loop
+
+; Compare length of comd
+start_com:
+ld b,(hl)
+
+push hl
+
+ld hl, inst
+ld a,0x20
+
+count_com:
+    cp (hl)
+    jr z,done
+    inc c
+    inc hl
+jr count_com
+
+done: pop hl
+
+ld a,c
+cp b
+jr z,cp_com
+
+wrong_com:
+    ld e, b
+    add hl,de
+    jr start_com
+
+
+cp_com:
+push hl
+ld de, inst-1
+
+l:inc hl
+inc de
+ld a,(de)
+cp (hl)
+jr nz,w
+djnz l
+
+inc hl
+inc de
+
+ld c,(hl)
+inc hl
+ld b,(hl)
+ld hl,bc
+
+jp (hl)
+
+w:pop hl
+jr wrong_com
+
+
+
+; b: length of current comd
+; c: length of inst
+; hl: pointer to current comd
+; de: pointer to inst
+
+org 0x0100
+db "print T"
+
+org 0x02f0
+db 0x05
+
+org 0x02f1
+db "print"
+
+org 0x02f6
+dw 0x8000
+
+org 0x8000
+halt
+
+
+
+
+;im 1
+;ei
+;halt
+
+
+;arg1 equ 0x0200
+;arg2 set b to value of arg2
+;print:
+;    ld hl,arg1
+;    ld c,0x00
+;
+;    otir
+;ret
+
