@@ -8,7 +8,7 @@ NL equ 0x0A
 
 INST equ 0x100
 
-;ld sp,0x0400
+ld sp,0x0400
 ld hl,inst
 ld c,0x01
 
@@ -51,8 +51,13 @@ new_line:
     ld a,NL
     out (c),a
     out (c),b ; output NL + CR and finish
+    jr finish
+
+.org 0x38
+ret
 
 ;output command
+finish:
 ld de, INST
 and a
 sbc hl,de
@@ -64,3 +69,4 @@ ld a,NL
 out (c),a
 ld a,CR
 out (c),a
+end:

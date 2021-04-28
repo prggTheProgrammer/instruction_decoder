@@ -1,7 +1,7 @@
 cpu Z80
 
 memory.ram.from 0x0000
-memory.ram.to 0xffff
+memory.ram.to 0x03ff
 
 
 serial simple

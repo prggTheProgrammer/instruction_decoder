@@ -1,17 +1,12 @@
 ; Get command
 .include load_inst.z80
-;.org 0x0100
-;db "print "
 
-;.org 0
 inst equ 0x0100
 
-;ld c, 0x00
-;;ld b,10 
-;in b,(c)
 
-;ld hl,inst
-;inir
+ei
+im 1
+
 
 ; Get command start
 ld hl, inst
@@ -38,6 +33,7 @@ push hl
 
 ld hl, inst
 ld a,0x20
+ld c,0
 
 count_com:
     cp (hl)
@@ -72,11 +68,13 @@ djnz l
 inc hl
 inc de
 
+;halt
 ld c,(hl)
 inc hl
 ld b,(hl)
 ld hl,bc
 
+;halt
 jp (hl)
 
 w:pop hl
