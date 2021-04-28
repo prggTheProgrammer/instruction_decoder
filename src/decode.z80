@@ -1,7 +1,10 @@
 ; Get command
 .include load_inst.z80
+;.org 0x0100
+;db "print "
 
-;inst equ 0x0100
+;.org 0
+inst equ 0x0100
 
 ;ld c, 0x00
 ;;ld b,10 
@@ -11,7 +14,6 @@
 ;inir
 
 ; Get command start
-org 0
 ld hl, inst
 
 ld a, (hl)
@@ -87,14 +89,14 @@ jr wrong_com
 ; hl: pointer to current comd
 ; de: pointer to inst
 
-org 0x0100
-db "print T"
+;.org 0x0100
+;db "print "
 
 org 0x02f0
 db 0x05
 
 org 0x02f1
-db "print"
+db "print "
 
 org 0x02f6
 dw 0x8000
