@@ -12,67 +12,67 @@ im 1
 ld hl, inst
 
 ld a, (hl)
-sub 0x61
+sub 0x61 ; get first char and subtract 61 (So a=0, b=1,etc)
 
 ld hl, 0x200
 cp 0
-jr z,start_com
+jr z,start_com; if first char == 0 skip loop
 
 ld b,a
 ld de , 0x0010
 
 loop:
     add hl, de
-    djnz loop
+    djnz loop ; repeat char times: add 0x10 to hl
 
 ; Compare length of comd
 start_com:
-ld b,(hl)
-
-push hl
+push hl ;save pointer to current cmd by pushing hl
 
 ld hl, inst
 ld a,0x20
 ld c,0
 
 count_com:
-    cp (hl)
+    cp (hl) ; if char of inst == 0x20 (space character)
     jr z,done
     inc c
-    inc hl
+    inc hl ; else inc c (counter of inst) and hl (char pointer) and repeat
 jr count_com
 
 done: pop hl
 
+cp_length_com:
+ld b,(hl) ; set b to lenght of current command
 ld a,c
 cp b
-jr z,cp_com
+jr z,cp_com ; if length of current cmd == length of inst
 
 wrong_com:
     ld e, b
     add hl,de
-    jr start_com
+    jr cp_length_com ;else add b to hl and compare lengths again
 
 
 cp_com:
 push hl
-ld de, inst-1
+ld de, inst-1 ; safe hl and ld de with inst-1
 
 l:inc hl
-inc de
+inc de ; inc hl (pointer to current cmd) and de (pointer to inst)
 ld a,(de)
 cp (hl)
-jr nz,w
+jr nz,w ; if hl != de jump to wrong com
 djnz l
 
 inc hl
 inc de
 
-;halt
+halt
 ld c,(hl)
 inc hl
 ld b,(hl)
-ld hl,bc
+ld hl,bc ; push bc  ret
 
 ;halt
 jp (hl)
