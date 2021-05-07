@@ -31,7 +31,7 @@ push hl ;save pointer to current cmd by pushing hl
 
 ld hl, inst
 ld a,0x20
-ld c,0
+ld c,0x0
 
 count_com:
     cp (hl) ; if char of inst == 0x20 (space character)
@@ -68,7 +68,7 @@ djnz l
 inc hl
 inc de
 
-halt
+;halt
 ld c,(hl)
 inc hl
 ld b,(hl)
@@ -91,16 +91,18 @@ jr wrong_com
 ;db "print "
 
 org 0x02f0
-db 0x05
-
-org 0x02f1
-db "print "
-
-org 0x02f6
-dw 0x8000
+db 0x05,"print"
+dw print
 
 org 0x8000
-halt
+print:
+    inc de
+    ld a,(de)
+    cp ' '
+    jp z,00
+    out (0x01),a
+    jr print
+    halt
 
 
 
